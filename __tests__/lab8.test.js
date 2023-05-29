@@ -95,8 +95,8 @@ describe('Basic user flow for Website', () => {
       }
     }
 
-    const cartCount = await page.$eval('#cart-count', (element) => element.innerText);
-    expect(cartCount).toBe('20');
+    const count = await page.$eval('#cart-count', (element) => element.innerText);
+    expect(count).toBe('20');
 
     
   }, 10000);
