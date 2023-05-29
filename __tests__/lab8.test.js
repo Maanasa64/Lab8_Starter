@@ -85,13 +85,18 @@ describe('Basic user flow for Website', () => {
     // Check to see if the innerText of #cart-count is 20
 
     const prodItems = await page.$$('product-item');
+
     for (let i = 0; i < prodItems.length; i++) {
+
       const item = prodItems[i];
       const shadowRoot = await page.evaluateHandle((element) => element.shadowRoot, item);
       const button = await shadowRoot.$('button');
       const innerText = await page.evaluate((element) => element.innerText, button);
+
       if (innerText !== 'Remove from Cart') {
+
         await button.click();
+        
       }
     }
 
@@ -111,22 +116,25 @@ describe('Basic user flow for Website', () => {
     await page.reload();
 
     const prodItems = await page.$$('product-item');
-    let allRemoved = true;
+    let empty = true;
 
     for(let i = 0; i < prodItems.length; i++){
+
       const item = prodItems[i];
       const shadowRoot = await page.evaluateHandle((element) => element.shadowRoot, item);
       const button = await shadowRoot.$('button');
       const innerText = await page.evaluate((element) => element.innerText, button);
+
       if(innerText != 'Remove from Cart'){
-        allRemoved = false;
+        empty = false;
       }
       else{
-        allRemoved = true;
+        empty = true;
       }
     }
+
     const count = await page.$eval('#cart-count', (element) => element.innerText);
-    expect(allRemoved).toBe(true);
+    expect(empty).toBe(true);
     expect(count).toBe('20');
 
 
@@ -150,12 +158,15 @@ describe('Basic user flow for Website', () => {
     // TODO - Step 6
     // Go through and click "Remove from Cart" on every single <product-item>, just like above.
     // Once you have, check to make sure that #cart-count is now 0
+
     const prodItems = await page.$$('product-item');
+
     for(let i = 0; i < prodItems.length; i++){
       const item = prodItems[i];
       const shadowRoot = await page.evaluateHandle((element) => element.shadowRoot, item);
       const button = await shadowRoot.$('button');
       const innerText = await page.evaluate((element) => element.innerText, button);
+
       if(!(innerText !== 'Remove from Cart')){
         await button.click();
       }
@@ -179,7 +190,7 @@ describe('Basic user flow for Website', () => {
     await page.reload();
 
     const prodItems = await page.$$('product-item');
-    let allRemoved = true;
+    let empty = true;
 
     for (let i = 0; i < prodItems.length; i++) {
       const item = prodItems[i];
@@ -187,13 +198,13 @@ describe('Basic user flow for Website', () => {
       const button = await shadowRoot.$('button');
       const innerText = await (await button.getProperty('textContent')).jsonValue();
       if (innerText !== 'Add to Cart') {
-        allRemoved = false;
+        empty = false;
         break; // Exit the loop if any item is not removed
       }
     }
 
     const count = await page.$eval('#cart-count', (element) => element.innerText);
-    expect(allRemoved).toBe(true);
+    expect(empty).toBe(true);
     expect(count).toBe('0');
 
 
@@ -205,6 +216,7 @@ describe('Basic user flow for Website', () => {
     console.log('Checking the localStorage...');
     // TODO - Step 8
     // At this point he item 'cart' in localStorage should be '[]', check to make sure it is
+    
     const cart = await page.evaluate(() => {
       const cartValue = localStorage.getItem('cart');
       return JSON.parse(cartValue);
